@@ -1,10 +1,9 @@
-import React, { useState } from "react";
-import { ReactElement } from "react";
+import React, { useState , ReactElement } from "react";
 import { calculatePosition } from "../utils/calculate-position.util";
 import { calculateWinner } from "../utils/calculate-winner.util";
 import { Board } from "./board.component";
 
-export function Game(): JSX.Element {
+export const Game = function(): JSX.Element {
     const [history, changeHistory] = useState([{ squares: Array(9).fill(null), moveLocation: { col: 0, row: 0}}]);
     const [stepNumber, setStepNumber] = useState(0);
     const [ xIsNext, changeNext] = useState(true);
@@ -46,8 +45,9 @@ export function Game(): JSX.Element {
         const className: string | undefined = move === stepNumber ? 'active' : undefined;
 
         return (
+          // eslint-disable-next-line react/no-array-index-key
           <li key={move}>
-            <button onClick={() => jumpTo(move)} className={className}>{desc}</button>
+            <button type='button' onClick={() => jumpTo(move)} className={className}>{desc}</button>
           </li>
         );
       });
@@ -56,7 +56,7 @@ export function Game(): JSX.Element {
 
     const winner = calculateWinner(current.squares);
 
-    const status: string =  winner ? 'Winner: ' + winner : 'Next player: ' + (xIsNext ? 'X' : 'O');
+    const status: string =  winner ? `Winner: ${  winner}` : `Next player: ${  xIsNext ? 'X' : 'O'}`;
     
     return (
         <div className='game'>
