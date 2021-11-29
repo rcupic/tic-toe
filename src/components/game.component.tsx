@@ -37,7 +37,7 @@ export const Game = function(): JSX.Element {
     }
 
 
-    const moves = history.map(({ moveLocation: { row, col } }, move): ReactElement<any,any> => {
+    const moves = history.map(({ moveLocation: { row, col } }, move): ReactElement<unknown, string> => {
         const desc: string = move ?
           `Go to move #${move}. Action: row: ${row}, column: ${col}`:
           'Go to game start';

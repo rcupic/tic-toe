@@ -1,10 +1,5 @@
 import React, { ReactElement } from "react"
-
-const Square = function({ onClick, value }: { onClick: React.MouseEventHandler<HTMLButtonElement>, value: string}) {
-  return <button type='button' className='square' onClick={onClick}>
-        {value}
-    </button>
-}
+import { Square } from "./square.components"
 
 export const Board = function({squares, onClick }: {squares: string[], onClick: (i: number) => void}): JSX.Element {
     const iterateArray = [0,1,2]
