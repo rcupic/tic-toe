@@ -1,4 +1,5 @@
-import React, { useState , ReactElement } from "react";
+import { ListItemButton } from "@mui/material";
+import { useState , ReactElement } from "react";
 import { calculatePosition } from "../utils/calculate-position.util";
 import { calculateWinner } from "../utils/calculate-winner.util";
 import { Board } from "./board.component";
@@ -42,13 +43,13 @@ export const Game = function(): JSX.Element {
           `Go to move #${move}. Action: row: ${row}, column: ${col}`:
           'Go to game start';
 
-        const className: string | undefined = move === stepNumber ? 'active' : undefined;
+        const selected: boolean = move === stepNumber;
 
         return (
           // eslint-disable-next-line react/no-array-index-key
-          <li key={move}>
-            <button type='button' onClick={() => jumpTo(move)} className={className}>{desc}</button>
-          </li>
+          <ListItemButton key={move} onClick={() => jumpTo(move)} selected={selected}>
+            {desc}
+          </ListItemButton>
         );
       });
 
