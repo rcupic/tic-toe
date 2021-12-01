@@ -1,9 +1,40 @@
 .game-board {
+  width: 50%;
+  height: 50%;
   padding: 3rem;
 }
 
 .board-row {
-  padding: 3rem;
   display: flex;
-  justify-content: space-evenly;
+  align-items: center;
+}
+
+.game-info {
+  width: 50%;
+
+  ol {
+    padding: 0;
+  }
+}
+
+.game {
+  display: flex;
+  height: 100%;
+}
+
+.square {
+  display: flex;
+  flex: 1;
+
+  &:nth-child(2) {
+    margin: 1rem;
+  }
+}
+
+#root {
+  height: 100%;
+}
+
+body {
+  height: 100%;
 }

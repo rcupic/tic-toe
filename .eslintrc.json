@@ -8,6 +8,7 @@
   },
   "extends": [
     "plugin:@typescript-eslint/recommended",
+    "plugin:prettier/recommended",
     "airbnb",
     "prettier",
     "plugin:import/errors",
