@@ -8,9 +8,9 @@ export const Board = function ({ squares, onClick }: { squares: string[]; onClic
     <>
       {iterateArray.map(
         (el): ReactElement => (
-          <div className="board-row">
+          <div className="board-row" key={el}>
             {iterateArray.map(el2 => (
-              <Square value={squares[el * 3 + el2]} onClick={() => onClick(el * 3 + el2)} />
+              <Square value={squares[el * 3 + el2]} onClick={() => onClick(el * 3 + el2)} key={el2} />
             ))}
           </div>
         )
