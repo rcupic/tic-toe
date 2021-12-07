@@ -1,33 +1,46 @@
-.game-board {
-  width: 50%;
-  height: 50%;
-  padding: 3rem;
-}
-
-.board-row {
-  display: flex;
-  align-items: center;
-}
-
-.game-info {
-  width: 50%;
-
-  ol {
-    padding: 0;
-  }
-}
-
 .game {
   display: flex;
   height: 100%;
+
+  .game-board {
+    width: 50%;
+    height: 50%;
+    padding: 3rem;
+
+    .board-row {
+      display: flex;
+      align-items: center;
+
+      .square {
+        display: flex;
+        flex: 1;
+
+        &:nth-child(2) {
+          margin: 1rem;
+        }
+      }
+    }
+  }
+
+  .game-info {
+    width: 50%;
+
+    ol {
+      padding: 0;
+    }
+  }
 }
 
-.square {
+.start {
   display: flex;
-  flex: 1;
+  flex-direction: column;
+  height: 100%;
+  align-items: center;
 
-  &:nth-child(2) {
-    margin: 1rem;
+  .player-row {
+    display: flex;
+    align-items: center;
+    margin-top: 3rem;
   }
 }
 

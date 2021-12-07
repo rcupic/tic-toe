@@ -1,13 +1,17 @@
-import { ListItemButton } from '@mui/material';
+import { Button, ListItemButton } from '@mui/material';
 import { useState, ReactElement } from 'react';
 import { calculatePosition } from '../utils/calculate-position.util';
 import { calculateWinner } from '../utils/calculate-winner.util';
 import { Board } from './Board';
+import { Player } from './Player';
 
 export const Game = function (): JSX.Element {
   const [history, changeHistory] = useState([{ squares: Array(9).fill(null), moveLocation: { col: 0, row: 0 } }]);
   const [stepNumber, setStepNumber] = useState(0);
-  const [xIsNext, changeNext] = useState(true);
+  const [playerOneIsNext, changeNext] = useState(true);
+  const [playerOne, changePlayerOne] = useState('');
+  const [playerTwo, changePlayerTwo] = useState('');
+  const [isGameStarted, changeGameStatus] = useState(false);
 
   const handleClick = (i: number): void => {
     const newHistory = history.slice(0, stepNumber + 1);
@@ -18,7 +22,7 @@ export const Game = function (): JSX.Element {
 
     if (calculateWinner(squares) || squares[i]) return;
 
-    squares[i] = xIsNext ? 'X' : 'O';
+    squares[i] = playerOneIsNext ? 'X' : 'O';
 
     const { row, col } = calculatePosition(i);
 
@@ -31,7 +35,11 @@ export const Game = function (): JSX.Element {
       ])
     );
     setStepNumber(newHistory.length);
-    changeNext(!xIsNext);
+    changeNext(!playerOneIsNext);
+  };
+
+  const handleStart = () => {
+    if (playerOne && playerTwo) changeGameStatus(true);
   };
 
   const jumpTo = (step: number): void => {
@@ -54,19 +62,42 @@ export const Game = function (): JSX.Element {
 
   const current = history[stepNumber];
 
-  const winner = calculateWinner(current.squares);
+  const winnerSymbol = calculateWinner(current.squares);
 
-  const status: string = winner ? `Winner: ${winner}` : `Next player: ${xIsNext ? 'X' : 'O'}`;
+  const status: string = winnerSymbol
+    ? `Winner: ${winnerSymbol === 'X' ? playerOne : playerTwo}`
+    : `Next player: ${playerOneIsNext ? playerOne : playerTwo}`;
+
+  if (playerOne && playerTwo && isGameStarted) {
+    return (
+      <div className="game">
+        <div className="game-board">
+          <div>{status}</div>
+          <Board squares={current.squares} onClick={handleClick} />
+        </div>
+        <div className="game-info">
+          <h1>History</h1>
+          <ol>{moves}</ol>
+        </div>
+      </div>
+    );
+  }
 
   return (
-    <div className="game">
-      <div className="game-board">
-        <div>{status}</div>
-        <Board squares={current.squares} onClick={handleClick} />
+    <div className="start">
+      <div className="player-row">
+        <Player changePlayer={changePlayerOne} />
+        <Player changePlayer={changePlayerTwo} />
       </div>
-      <div className="game-info">
-        <h1>History</h1>
-        <ol>{moves}</ol>
+      <div className="player-row">
+        <Button
+          sx={{ height: '3rem', width: '3rem', maxWidth: '3rem', display: 'flex', flex: '1' }}
+          type="button"
+          variant="contained"
+          onClick={handleStart}
+        >
+          Start
+        </Button>
       </div>
     </div>
   );
