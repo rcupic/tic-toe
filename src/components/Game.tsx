@@ -9,8 +9,8 @@ export const Game = function (): JSX.Element {
   const [stepNumber, setStepNumber] = useState(0);
   const [playerOneIsNext, changeNext] = useState(true);
   const [players, changePlayers] = useState([
-    { placeholder: 'Player One', name: 'playerOne', uniqueName: '' },
-    { placeholder: 'Player Two', name: 'playerTwo', uniqueName: '' },
+    { placeholder: 'Player One', name: 'playerOne', uniqueName: '', error: '' },
+    { placeholder: 'Player Two', name: 'playerTwo', uniqueName: '', error: '' },
   ]);
   const [isGameStarted, changeGameStatus] = useState(false);
 
@@ -40,17 +40,23 @@ export const Game = function (): JSX.Element {
   };
 
   const handleChange = (event: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>): void => {
+    const newName = event.target.value;
     const changedPlayerIndex = players.findIndex(el => el.name === event.target.name);
 
     const newPlayers = [...players];
 
-    newPlayers[changedPlayerIndex].uniqueName = event.target.value;
+    const playerWithSameName = players.find(el => el.uniqueName === newName);
+
+    newPlayers[changedPlayerIndex].uniqueName = newName;
+
+    if (playerWithSameName) newPlayers[changedPlayerIndex].error = 'Name is already taken.';
+    else if (newPlayers[changedPlayerIndex].error) newPlayers[changedPlayerIndex].error = '';
 
     changePlayers(newPlayers);
   };
 
   const handleStart = () => {
-    if (players.every(el => !!el.uniqueName)) changeGameStatus(true);
+    if (players.every(el => !!el.uniqueName && !el.error)) changeGameStatus(true);
   };
 
   const jumpTo = (step: number): void => {
@@ -97,19 +103,35 @@ export const Game = function (): JSX.Element {
   return (
     <div className="start">
       <div className="player-row">
-        {players.map(player => (
-          <TextField
-            sx={{ flex: 2, marginRight: '3rem', marginLeft: '3rem' }}
-            id="standard-basic"
-            variant="standard"
-            placeholder={player.placeholder}
-            name={player.name}
-            onChange={handleChange}
-          />
-        ))}
+        {players.map(player =>
+          player.error ? (
+            <TextField
+              error
+              sx={{ flex: 2, marginRight: '3rem', marginLeft: '3rem' }}
+              id="standard-error-helper-text"
+              variant="standard"
+              placeholder={player.placeholder}
+              name={player.name}
+              onChange={handleChange}
+              helperText={player.error}
+              key={player.name}
+            />
+          ) : (
+            <TextField
+              sx={{ flex: 2, marginRight: '3rem', marginLeft: '3rem' }}
+              id="standard-basic"
+              variant="standard"
+              placeholder={player.placeholder}
+              name={player.name}
+              onChange={handleChange}
+              key={player.name}
+            />
+          )
+        )}
       </div>
       <div className="player-row">
         <Button
+          disabled={!players.every(el => !!el.uniqueName && !el.error)}
           sx={{ height: '3rem', width: '3rem', maxWidth: '3rem', display: 'flex', flex: '1' }}
           type="button"
           variant="contained"
