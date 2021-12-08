@@ -1,4 +1,4 @@
-import { Button, ListItemButton } from '@mui/material';
+import { Button, ListItemButton, TextField } from '@mui/material';
 import { useState, ReactElement } from 'react';
 import { calculatePosition } from '../utils/calculate-position.util';
 import { calculateWinner } from '../utils/calculate-winner.util';
@@ -9,8 +9,10 @@ export const Game = function (): JSX.Element {
   const [history, changeHistory] = useState([{ squares: Array(9).fill(null), moveLocation: { col: 0, row: 0 } }]);
   const [stepNumber, setStepNumber] = useState(0);
   const [playerOneIsNext, changeNext] = useState(true);
-  const [playerOne, changePlayerOne] = useState('');
-  const [playerTwo, changePlayerTwo] = useState('');
+  const [players, changePlayers] = useState([
+    { placeholder: 'Player One', name: 'playerOne', uniqueName: '' },
+    { placeholder: 'Player Two', name: 'playerTwo', uniqueName: '' },
+  ]);
   const [isGameStarted, changeGameStatus] = useState(false);
 
   const handleClick = (i: number): void => {
@@ -38,8 +40,18 @@ export const Game = function (): JSX.Element {
     changeNext(!playerOneIsNext);
   };
 
+  const handleChange = (event: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>): void => {
+    const changedPlayerIndex = players.findIndex(el => el.name === event.target.name);
+
+    const newPlayers = [...players];
+
+    newPlayers[changedPlayerIndex].uniqueName = event.target.value;
+
+    changePlayers(newPlayers);
+  };
+
   const handleStart = () => {
-    if (playerOne && playerTwo) changeGameStatus(true);
+    if (players.every(el => !!el.uniqueName)) changeGameStatus(true);
   };
 
   const jumpTo = (step: number): void => {
@@ -65,10 +77,10 @@ export const Game = function (): JSX.Element {
   const winnerSymbol = calculateWinner(current.squares);
 
   const status: string = winnerSymbol
-    ? `Winner: ${winnerSymbol === 'X' ? playerOne : playerTwo}`
-    : `Next player: ${playerOneIsNext ? playerOne : playerTwo}`;
+    ? `Winner: ${winnerSymbol === 'X' ? players[0].uniqueName : players[1].uniqueName}`
+    : `Next player: ${playerOneIsNext ? players[0].uniqueName : players[1].uniqueName}`;
 
-  if (playerOne && playerTwo && isGameStarted) {
+  if (players.every(el => !!el.uniqueName) && isGameStarted) {
     return (
       <div className="game">
         <div className="game-board">
@@ -86,8 +98,16 @@ export const Game = function (): JSX.Element {
   return (
     <div className="start">
       <div className="player-row">
-        <Player changePlayer={changePlayerOne} />
-        <Player changePlayer={changePlayerTwo} />
+        {players.map(player => (
+          <TextField
+            sx={{ flex: 2, marginRight: '3rem', marginLeft: '3rem' }}
+            id="standard-basic"
+            variant="standard"
+            placeholder={player.placeholder}
+            name={player.name}
+            onChange={handleChange}
+          />
+        ))}
       </div>
       <div className="player-row">
         <Button
