@@ -1,8 +1,10 @@
-import { Button, ListItemButton, TextField } from '@mui/material';
-import { useState, ReactElement } from 'react';
+import { Button, ListItemButton } from '@mui/material';
+import { useState, ReactElement, useMemo } from 'react';
+import { playerContext } from '../contexts/PlayerContext';
 import { calculatePosition } from '../utils/calculate-position.util';
 import { calculateWinner } from '../utils/calculate-winner.util';
 import { Board } from './Board';
+import { Player } from './Player';
 
 export const Game = function (): JSX.Element {
   const [history, changeHistory] = useState([{ squares: Array(9).fill(null), moveLocation: { col: 0, row: 0 } }]);
@@ -39,22 +41,6 @@ export const Game = function (): JSX.Element {
     changeNext(!playerOneIsNext);
   };
 
-  const handleChange = (event: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>): void => {
-    const newName = event.target.value;
-    const changedPlayerIndex = players.findIndex(el => el.name === event.target.name);
-
-    const newPlayers = [...players];
-
-    const playerWithSameName = players.find(el => el.uniqueName === newName);
-
-    newPlayers[changedPlayerIndex].uniqueName = newName;
-
-    if (playerWithSameName) newPlayers[changedPlayerIndex].error = 'Name is already taken.';
-    else if (newPlayers[changedPlayerIndex].error) newPlayers[changedPlayerIndex].error = '';
-
-    changePlayers(newPlayers);
-  };
-
   const handleStart = () => {
     if (players.every(el => !!el.uniqueName && !el.error)) changeGameStatus(true);
   };
@@ -85,6 +71,28 @@ export const Game = function (): JSX.Element {
     ? `Winner: ${winnerSymbol === 'X' ? players[0].uniqueName : players[1].uniqueName}`
     : `Next player: ${playerOneIsNext ? players[0].uniqueName : players[1].uniqueName}`;
 
+  const value = useMemo(
+    () => ({
+      players,
+      handleChange: (event: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>): void => {
+        const newName = event.target.value;
+        const changedPlayerIndex = players.findIndex(el => el.name === event.target.name);
+
+        const newPlayers = [...players];
+
+        const playerWithSameName = players.find(el => el.uniqueName === newName);
+
+        newPlayers[changedPlayerIndex].uniqueName = newName;
+
+        if (playerWithSameName) newPlayers[changedPlayerIndex].error = 'Name is already taken.';
+        else if (newPlayers[changedPlayerIndex].error) newPlayers[changedPlayerIndex].error = '';
+
+        changePlayers(newPlayers);
+      },
+    }),
+    [players]
+  );
+
   if (players.every(el => !!el.uniqueName) && isGameStarted) {
     return (
       <div className="game">
@@ -102,33 +110,9 @@ export const Game = function (): JSX.Element {
 
   return (
     <div className="start">
-      <div className="player-row">
-        {players.map(player =>
-          player.error ? (
-            <TextField
-              error
-              sx={{ flex: 2, marginRight: '3rem', marginLeft: '3rem' }}
-              id="standard-error-helper-text"
-              variant="standard"
-              placeholder={player.placeholder}
-              name={player.name}
-              onChange={handleChange}
-              helperText={player.error}
-              key={player.name}
-            />
-          ) : (
-            <TextField
-              sx={{ flex: 2, marginRight: '3rem', marginLeft: '3rem' }}
-              id="standard-basic"
-              variant="standard"
-              placeholder={player.placeholder}
-              name={player.name}
-              onChange={handleChange}
-              key={player.name}
-            />
-          )
-        )}
-      </div>
+      <playerContext.Provider value={value}>
+        <Player />
+      </playerContext.Provider>
       <div className="player-row">
         <Button
           disabled={!players.every(el => !!el.uniqueName && !el.error)}
