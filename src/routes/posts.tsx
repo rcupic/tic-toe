@@ -1,4 +1,4 @@
-import { Button, IconButton } from '@mui/material';
+import { IconButton } from '@mui/material';
 import { useState } from 'react';
 import FavoriteIcon from '@mui/icons-material/Favorite';
 import { red } from '@mui/material/colors';
@@ -46,17 +46,11 @@ export const Posts = function (): JSX.Element {
             <p>{post.text}</p>
             <i>{post.author.name}</i>
             {post.like ? (
-              <IconButton
-                sx={{ height: '3rem', width: '3rem', maxWidth: '3rem', display: 'flex', flex: '1' }}
-                onClick={() => handleUnlike(post.id)}
-              >
+              <IconButton sx={{ display: 'flex' }} onClick={() => handleUnlike(post.id)}>
                 <FavoriteIcon sx={{ color: red[500] }} />
               </IconButton>
             ) : (
-              <IconButton
-                sx={{ height: '3rem', width: '3rem', maxWidth: '3rem', display: 'flex', flex: '1' }}
-                onClick={() => handleLike(post.id)}
-              >
+              <IconButton sx={{ display: 'flex' }} onClick={() => handleLike(post.id)}>
                 <FavoriteIcon />
               </IconButton>
             )}
