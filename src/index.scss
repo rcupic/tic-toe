@@ -44,6 +44,23 @@
   }
 }
 
+.posts-view {
+  display: flex;
+  height: 100%;
+
+  .posts-category-nav {
+    width: 5%;
+    height: 50%;
+    padding: 3rem;
+    border-right: solid 1px;
+  }
+
+  .posts-table-view {
+    margin-left: 10rem;
+    width: 95%;
+  }
+}
+
 #root {
   height: 100%;
 }
