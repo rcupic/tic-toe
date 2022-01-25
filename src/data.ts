@@ -18,6 +18,17 @@ const posts: IPost[] = [
       name: 'Roko',
       title: 'Amater',
     },
+    like: null,
+  },
+  {
+    id: '2',
+    title: 'Haiku',
+    text: 'This is my haiku about React',
+    author: {
+      name: 'Roko',
+      title: 'Amater',
+    },
+    like: null,
   },
 ];
 
@@ -42,4 +53,5 @@ export interface IPost {
     name: string;
     title: string;
   };
+  like: { id: string } | null;
 }
