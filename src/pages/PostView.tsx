@@ -1,15 +1,18 @@
 import { IconButton } from '@mui/material';
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import FavoriteIcon from '@mui/icons-material/Favorite';
 import { red } from '@mui/material/colors';
 import LoginIcon from '@mui/icons-material/Login';
 import LogoutIcon from '@mui/icons-material/Logout';
 import { getPosts } from '../data';
 import { getToken, getViewer, removeToken, setToken } from '../helpers/auth.helper';
+import { LoginDialog } from '../components/LoginDialog';
+import { LoginDialogContext } from '../contexts/LoginDialogContext';
 
 export const PostView = function (): JSX.Element {
   const [posts, changePosts] = useState(getPosts());
   const [viewer, changeViewer] = useState(getViewer());
+  const [loginDialogOpen, changeLoginDialogOpen] = useState(false);
   let likeCounter = 1;
 
   const handleLike = (i: string): void => {
@@ -54,9 +57,7 @@ export const PostView = function (): JSX.Element {
   };
 
   const handleLogin = (): void => {
-    setToken();
-
-    changeViewer(getViewer());
+    changeLoginDialogOpen(true);
   };
 
   const handleLogout = (): void => {
@@ -64,6 +65,19 @@ export const PostView = function (): JSX.Element {
 
     changeViewer(getViewer());
   };
+
+  const value = useMemo(
+    () => ({
+      open: loginDialogOpen,
+      onSubmit: () => {
+        setToken();
+
+        changeViewer(getViewer());
+        changeLoginDialogOpen(false);
+      },
+    }),
+    [loginDialogOpen]
+  );
 
   return (
     <div className="posts-view">
@@ -96,6 +110,9 @@ export const PostView = function (): JSX.Element {
           </IconButton>
         )}
       </div>
+      <LoginDialogContext.Provider value={value}>
+        <LoginDialog />
+      </LoginDialogContext.Provider>
     </div>
   );
 };

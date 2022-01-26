@@ -1,9 +1,9 @@
 import { TextField } from '@mui/material';
 import React from 'react';
-import { playerContext } from '../contexts/PlayerContext';
+import { PlayerContext } from '../contexts/PlayerContext';
 
 export const Player = function () {
-  const { players, handleChange } = React.useContext(playerContext);
+  const { players, handleChange } = React.useContext(PlayerContext);
 
   return (
     <div className="player-row">

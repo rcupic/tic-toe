@@ -1,6 +1,6 @@
 import React from 'react';
 
-export const playerContext = React.createContext(
+export const PlayerContext = React.createContext(
   {} as {
     players: {
       placeholder: string;

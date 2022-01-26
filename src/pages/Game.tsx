@@ -1,6 +1,6 @@
 import { Button, ListItemButton } from '@mui/material';
 import { useState, ReactElement, useMemo } from 'react';
-import { playerContext } from '../contexts/PlayerContext';
+import { PlayerContext } from '../contexts/PlayerContext';
 import { calculatePosition } from '../utils/calculate-position.util';
 import { calculateWinner } from '../utils/calculate-winner.util';
 import { Board } from '../components/Board';
@@ -110,9 +110,9 @@ export const Game = function (): JSX.Element {
 
   return (
     <div className="start">
-      <playerContext.Provider value={value}>
+      <PlayerContext.Provider value={value}>
         <Player />
-      </playerContext.Provider>
+      </PlayerContext.Provider>
       <div className="player-row">
         <Button
           disabled={!players.every(el => !!el.uniqueName && !el.error)}
