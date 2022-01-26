@@ -10,14 +10,23 @@ import { PostTable } from './PostTable';
 export const PostView = function (): JSX.Element {
   const [viewer, changeViewer] = useState(getViewer());
   const [loginDialogOpen, changeLoginDialogOpen] = useState(false);
+  const [preLoginAction, changePreLoginAction] = useState<{
+    callback: (parameter: any) => void;
+    parameter: any;
+  } | null>(null);
 
-  const handleLogin = (): void => {
+  const handleLogin = (callback?: (parameter?: any) => void, parameter?: any): void => {
+    if (callback) {
+      changePreLoginAction({ callback, parameter });
+    }
+
     changeLoginDialogOpen(true);
   };
 
   const handleLogout = (): void => {
     removeToken();
 
+    changePreLoginAction(null);
     changeViewer(getViewer());
   };
 
@@ -30,10 +39,15 @@ export const PostView = function (): JSX.Element {
 
         changeViewer(getViewer());
         changeLoginDialogOpen(false);
+
+        if (preLoginAction) {
+          preLoginAction.callback(preLoginAction.parameter);
+          changePreLoginAction(null);
+        }
       },
       handleLogin,
     }),
-    [loginDialogOpen, viewer]
+    [loginDialogOpen, viewer, preLoginAction]
   );
 
   return (

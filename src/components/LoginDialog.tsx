@@ -10,7 +10,7 @@ export const LoginDialog = function () {
       <DialogTitle>Login</DialogTitle>
       <DialogContent>
         <TextField autoFocus margin="dense" id="name" label="Email Address" type="email" fullWidth variant="standard" />
-        <TextField autoFocus margin="dense" id="name" label="Email Address" type="email" fullWidth variant="standard" />
+        <TextField autoFocus margin="dense" id="name" label="Password" type="password" fullWidth variant="standard" />
       </DialogContent>
       <DialogActions>
         <Button onClick={onSubmit}>Submit</Button>

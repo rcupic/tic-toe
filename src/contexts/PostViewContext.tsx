@@ -5,7 +5,11 @@ export const PostViewContext = React.createContext(
   {} as {
     viewer: IViewer | null;
     open: boolean;
+    preLoginAction?: {
+      callback: (parameter: any) => void;
+      parameter: any;
+    } | null;
     onSubmit: () => void;
-    handleLogin: () => void;
+    handleLogin: (callback?: (parameter?: any) => void, parameter?: any) => void;
   }
 );

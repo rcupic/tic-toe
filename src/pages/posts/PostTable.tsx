@@ -11,13 +11,7 @@ export const PostTable = function (): JSX.Element {
 
   let likeCounter = 1;
 
-  const handleLike = (i: string): void => {
-    if (!viewer) {
-      handleLogin();
-
-      return;
-    }
-
+  const addLike = (i: string): void => {
     const existingPostIndex = posts.findIndex(el => el.id === i);
 
     if (existingPostIndex === -1 || posts[existingPostIndex].like) {
@@ -31,6 +25,16 @@ export const PostTable = function (): JSX.Element {
 
       changePosts(newPosts);
     }
+  };
+
+  const handleLike = (i: string): void => {
+    if (!viewer) {
+      handleLogin(addLike, i);
+
+      return;
+    }
+
+    addLike(i);
   };
 
   const handleUnlike = (i: string): void => {
