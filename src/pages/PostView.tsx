@@ -2,13 +2,23 @@ import { IconButton } from '@mui/material';
 import { useState } from 'react';
 import FavoriteIcon from '@mui/icons-material/Favorite';
 import { red } from '@mui/material/colors';
+import LoginIcon from '@mui/icons-material/Login';
+import LogoutIcon from '@mui/icons-material/Logout';
 import { getPosts } from '../data';
+import { getToken, getViewer, removeToken, setToken } from '../helpers/auth.helper';
 
-export const Posts = function (): JSX.Element {
+export const PostView = function (): JSX.Element {
   const [posts, changePosts] = useState(getPosts());
+  const [viewer, changeViewer] = useState(getViewer());
   let likeCounter = 1;
 
   const handleLike = (i: string): void => {
+    if (!viewer) {
+      console.log('Not logged in');
+
+      return;
+    }
+
     const existingPostIndex = posts.findIndex(el => el.id === i);
 
     if (existingPostIndex === -1 || posts[existingPostIndex].like) {
@@ -25,6 +35,12 @@ export const Posts = function (): JSX.Element {
   };
 
   const handleUnlike = (i: string): void => {
+    if (!viewer) {
+      console.log('Not logged in');
+
+      return;
+    }
+
     const existingPostIndex = posts.findIndex(el => el.id === i);
 
     if (existingPostIndex === -1 || !posts[existingPostIndex].like) {
@@ -35,6 +51,18 @@ export const Posts = function (): JSX.Element {
 
       changePosts(newPosts);
     }
+  };
+
+  const handleLogin = (): void => {
+    setToken();
+
+    changeViewer(getViewer());
+  };
+
+  const handleLogout = (): void => {
+    removeToken();
+
+    changeViewer(getViewer());
   };
 
   return (
@@ -56,6 +84,17 @@ export const Posts = function (): JSX.Element {
             )}
           </div>
         ))}
+      </div>
+      <div>
+        {getToken() ? (
+          <IconButton sx={{ display: 'flex' }} onClick={() => handleLogout()}>
+            <LogoutIcon />
+          </IconButton>
+        ) : (
+          <IconButton sx={{ display: 'flex' }} onClick={() => handleLogin()}>
+            <LoginIcon />
+          </IconButton>
+        )}
       </div>
     </div>
   );

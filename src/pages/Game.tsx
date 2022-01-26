@@ -3,8 +3,8 @@ import { useState, ReactElement, useMemo } from 'react';
 import { playerContext } from '../contexts/PlayerContext';
 import { calculatePosition } from '../utils/calculate-position.util';
 import { calculateWinner } from '../utils/calculate-winner.util';
-import { Board } from './Board';
-import { Player } from './Player';
+import { Board } from '../components/Board';
+import { Player } from '../components/Player';
 
 export const Game = function (): JSX.Element {
   const [history, changeHistory] = useState([{ squares: Array(9).fill(null), moveLocation: { col: 0, row: 0 } }]);
