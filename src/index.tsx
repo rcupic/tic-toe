@@ -3,7 +3,7 @@ import ReactDOM from 'react-dom';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import { Game } from './pages/Game';
 import './index.scss';
-import { PostView } from './pages/PostView';
+import { PostView } from './pages/posts/PostView';
 
 ReactDOM.render(
   <BrowserRouter>

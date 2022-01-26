@@ -1,9 +1,9 @@
 import { Button, Dialog, DialogActions, DialogContent, DialogTitle, TextField } from '@mui/material';
 import React from 'react';
-import { LoginDialogContext } from '../contexts/LoginDialogContext';
+import { PostViewContext } from '../contexts/PostViewContext';
 
 export const LoginDialog = function () {
-  const { open, onSubmit } = React.useContext(LoginDialogContext);
+  const { open, onSubmit } = React.useContext(PostViewContext);
 
   return (
     <Dialog open={open}>
