@@ -1,121 +1,100 @@
-import { Button, Dialog, DialogActions, DialogContent, DialogTitle, TextField } from '@mui/material';
-import React, { ChangeEventHandler, useEffect, useState } from 'react';
+/* eslint-disable react/destructuring-assignment */
+import { FormatShapes } from '@mui/icons-material';
+import {
+  Button,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
+  StandardTextFieldProps,
+  TextField,
+  TextFieldProps,
+} from '@mui/material';
+import React from 'react';
+import { Controller, useForm } from 'react-hook-form';
 import { PostViewContext } from '../contexts/PostViewContext';
 
-const regEmail =
-  // eslint-disable-next-line no-useless-escape
-  /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+interface ITextFieldLoginProps extends StandardTextFieldProps {
+  errors: { [x: string]: any };
+  fieldName: string;
+}
 
-const passwordRequirement = 'Password must have at least 8 characters';
-
-const isPasswordValid = (value: string | undefined): boolean => {
-  if (value === undefined || value.length < 8) {
-    return false;
-  }
-
-  return true;
-};
-
-const isMailValid = (value: string | undefined) => {
-  if (value === undefined || !regEmail.test(value)) {
-    return false;
-  }
-
-  return true;
+const TextFieldLogin = function ({ errors, fieldName, ...restProps }: ITextFieldLoginProps) {
+  return (
+    <TextField
+      {...restProps}
+      margin="dense"
+      id={fieldName}
+      type={fieldName}
+      fullWidth
+      variant="standard"
+      required
+      error={!!errors[fieldName]}
+      helperText={errors[fieldName]?.message}
+    />
+  );
 };
 
 export const LoginDialog = function () {
-  const { open, onSubmit: globalOnSubmit } = React.useContext(PostViewContext);
-  const [mailAddress, changeMailAddress] = useState<string | undefined>();
-  const [password, changePassword] = useState<string | undefined>();
-  const [mailError, changeMailError] = useState<string | undefined>();
-  const [passwordError, changePasswordError] = useState<string | undefined>();
-  const [disabled, changeDisabled] = useState(true);
+  const { open } = React.useContext(PostViewContext);
+  const {
+    handleSubmit,
+    formState: { errors },
+    control,
+  } = useForm();
 
-  useEffect(() => {
-    if (password && isPasswordValid(password) && isMailValid(mailAddress) && mailAddress) {
-      changeDisabled(false);
-    } else {
-      changeDisabled(true);
-    }
-  }, [password, mailAddress]);
-
-  const onMailChange: ChangeEventHandler<HTMLInputElement | HTMLTextAreaElement> = (e): void => {
-    changeMailAddress(e.target.value);
-  };
-
-  const onPasswordChange: ChangeEventHandler<HTMLInputElement | HTMLTextAreaElement> = (e): void => {
-    changePassword(e.target.value);
-  };
-
-  const onPasswordBlur: React.FocusEventHandler<HTMLInputElement | HTMLTextAreaElement> = (e): void => {
-    if (!isPasswordValid(password)) {
-      changePasswordError(passwordRequirement);
-    } else {
-      changePasswordError(undefined);
-    }
-  };
-
-  const onMailBlur: React.FocusEventHandler<HTMLInputElement | HTMLTextAreaElement> = (e): void => {
-    if (!isMailValid(mailAddress)) {
-      changeMailError('Mail is invalid');
-    } else {
-      changeMailError(undefined);
-    }
-  };
-
-  const onPasswordFocus: React.FocusEventHandler<HTMLInputElement | HTMLTextAreaElement> = (e): void => {
-    changePasswordError(undefined);
-  };
-
-  const onMailFocus: React.FocusEventHandler<HTMLInputElement | HTMLTextAreaElement> = (e): void => {
-    changeMailError(undefined);
-  };
-
-  const onSubmit = (): void => {
-    if (password && !passwordError && mailAddress && !mailError) {
-      globalOnSubmit();
-    }
-  };
+  const onSubmit = (): void => {};
 
   return (
     <Dialog open={open}>
       <DialogTitle>Login</DialogTitle>
       <DialogContent>
-        <TextField
-          required
-          autoFocus
-          margin="dense"
-          id="name"
-          label="Email Address"
-          type="email"
-          fullWidth
-          variant="standard"
-          onChange={onMailChange}
-          onBlur={onMailBlur}
-          onFocus={onMailFocus}
-          error={!!mailError}
-          helperText={mailError}
+        <Controller
+          control={control}
+          name="email"
+          rules={{ required: 'Email is required' }}
+          defaultValue=""
+          render={({ field }) => (
+            <TextField
+              {...field}
+              margin="dense"
+              id="email"
+              type="email"
+              label="Email"
+              fullWidth
+              variant="standard"
+              required
+              error={!!errors.email}
+              helperText={errors.email?.message}
+            />
+          )}
         />
-        <TextField
-          required
-          margin="dense"
-          id="name"
-          label="Password"
-          type="password"
-          fullWidth
-          variant="standard"
-          onChange={onPasswordChange}
-          onBlur={onPasswordBlur}
-          onFocus={onPasswordFocus}
-          error={!!passwordError}
-          helperText={passwordError}
+        <Controller
+          control={control}
+          name="password"
+          rules={{ required: 'Password is required', minLength: { value: 8, message: 'Minimum length is 8' } }}
+          defaultValue=""
+          render={({ field }) => (
+            <TextField
+              {...field}
+              margin="dense"
+              id="password"
+              type="password"
+              fullWidth
+              variant="standard"
+              required
+              error={!!errors.password}
+              helperText={errors.password?.message}
+            />
+          )}
         />
       </DialogContent>
       <DialogActions>
-        <Button disabled={disabled} onClick={onSubmit}>
-          Submit
-        </Button>
+        <Controller
+          control={control}
+          name="onSubmit"
+          render={() => <Button onClick={handleSubmit(onSubmit)}>Submit</Button>}
+        />
       </DialogActions>
     </Dialog>
   );
