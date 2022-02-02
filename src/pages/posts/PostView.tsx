@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { IconButton } from '@mui/material';
 import { useMemo, useState } from 'react';
 import LoginIcon from '@mui/icons-material/Login';

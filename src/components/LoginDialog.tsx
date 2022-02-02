@@ -4,8 +4,11 @@ import React from 'react';
 import { Controller, FieldValues, useForm, UseFormRegister } from 'react-hook-form';
 import { PostViewContext } from '../contexts/PostViewContext';
 
+// eslint-disable-next-line no-useless-escape
+const emailRegExp = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/g;
+
 interface ITextFieldLoginProps {
-  errors: { [x: string]: any };
+  errors: { [x: string]: { message: string } };
   fieldName: string;
   register: UseFormRegister<FieldValues>;
 }
@@ -45,7 +48,7 @@ export const LoginDialog = function () {
         <Controller
           control={control}
           name="email"
-          rules={{ required: 'Email is required' }}
+          rules={{ required: 'Email is required', pattern: { value: emailRegExp, message: 'Password is invalid' } }}
           defaultValue=""
           render={() => <TextFieldLogin errors={errors} fieldName="email" register={register} />}
         />

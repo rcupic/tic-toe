@@ -14,9 +14,7 @@ export const PostTable = function (): JSX.Element {
   const addLike = (i: string): void => {
     const existingPostIndex = posts.findIndex(el => el.id === i);
 
-    if (existingPostIndex === -1 || posts[existingPostIndex].like) {
-      console.log('Something went wrong');
-    } else {
+    if (existingPostIndex !== -1 && !posts[existingPostIndex].like) {
       const newPosts = [...posts];
       newPosts[existingPostIndex].like = {
         id: likeCounter.toString(),
@@ -40,9 +38,7 @@ export const PostTable = function (): JSX.Element {
   const handleUnlike = (i: string): void => {
     const existingPostIndex = posts.findIndex(el => el.id === i);
 
-    if (existingPostIndex === -1 || !posts[existingPostIndex].like) {
-      console.log('Something went wrong');
-    } else {
+    if (existingPostIndex !== -1 && posts[existingPostIndex].like) {
       const newPosts = [...posts];
       newPosts[existingPostIndex].like = null;
 
