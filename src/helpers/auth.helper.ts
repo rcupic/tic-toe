@@ -16,6 +16,14 @@ export const getViewer = (): IViewer | null => {
   return null;
 };
 
+export const logIn = (email: string, password: string): IViewer | null => {
+  if (email === 'rcupic@profico.hr' && password === 'admin123') {
+    setToken();
+  }
+
+  return getViewer();
+};
+
 export interface IViewer {
   id: string;
   fullName: string;

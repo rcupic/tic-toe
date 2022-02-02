@@ -3,7 +3,7 @@ import { IconButton } from '@mui/material';
 import { useMemo, useState } from 'react';
 import LoginIcon from '@mui/icons-material/Login';
 import LogoutIcon from '@mui/icons-material/Logout';
-import { getToken, getViewer, removeToken, setToken } from '../../helpers/auth.helper';
+import { getToken, getViewer, logIn, removeToken } from '../../helpers/auth.helper';
 import { LoginDialog } from '../../components/LoginDialog';
 import { PostViewContext } from '../../contexts/PostViewContext';
 import { PostTable } from './PostTable';
@@ -35,15 +35,17 @@ export const PostView = function (): JSX.Element {
     () => ({
       viewer,
       open: loginDialogOpen,
-      onSubmit: (): void => {
-        setToken();
+      onSubmit: (e: any): void => {
+        const newViewer = logIn(e.email, e.password);
 
-        changeViewer(getViewer());
-        changeLoginDialogOpen(false);
+        if (newViewer) {
+          changeViewer(newViewer);
+          changeLoginDialogOpen(false);
 
-        if (preLoginAction) {
-          preLoginAction.callback(preLoginAction.parameter);
-          changePreLoginAction(null);
+          if (preLoginAction) {
+            preLoginAction.callback(preLoginAction.parameter);
+            changePreLoginAction(null);
+          }
         }
       },
       handleLogin,

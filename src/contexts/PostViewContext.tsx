@@ -10,7 +10,7 @@ export const PostViewContext = React.createContext(
       callback: (parameter: any) => void;
       parameter: any;
     } | null;
-    onSubmit: () => void;
+    onSubmit: (e: any) => void;
     handleLogin: (callback?: (parameter?: any) => void, parameter?: any) => void;
   }
 );

@@ -31,15 +31,13 @@ const TextFieldLogin = function ({ errors, fieldName, register }: ITextFieldLogi
 };
 
 export const LoginDialog = function () {
-  const { open } = React.useContext(PostViewContext);
+  const { open, onSubmit } = React.useContext(PostViewContext);
   const {
     handleSubmit,
     formState: { errors },
     control,
     register,
   } = useForm();
-
-  const onSubmit = (): void => {};
 
   return (
     <Dialog open={open}>
@@ -48,7 +46,7 @@ export const LoginDialog = function () {
         <Controller
           control={control}
           name="email"
-          rules={{ required: 'Email is required', pattern: { value: emailRegExp, message: 'Password is invalid' } }}
+          rules={{ required: 'Email is required', pattern: { value: emailRegExp, message: 'Email is invalid' } }}
           defaultValue=""
           render={() => <TextFieldLogin errors={errors} fieldName="email" register={register} />}
         />
