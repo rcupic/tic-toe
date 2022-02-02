@@ -1,31 +1,23 @@
 /* eslint-disable react/destructuring-assignment */
-import { FormatShapes } from '@mui/icons-material';
-import {
-  Button,
-  Dialog,
-  DialogActions,
-  DialogContent,
-  DialogTitle,
-  StandardTextFieldProps,
-  TextField,
-  TextFieldProps,
-} from '@mui/material';
+import { Button, capitalize, Dialog, DialogActions, DialogContent, DialogTitle, TextField } from '@mui/material';
 import React from 'react';
-import { Controller, useForm } from 'react-hook-form';
+import { Controller, FieldValues, useForm, UseFormRegister } from 'react-hook-form';
 import { PostViewContext } from '../contexts/PostViewContext';
 
-interface ITextFieldLoginProps extends StandardTextFieldProps {
+interface ITextFieldLoginProps {
   errors: { [x: string]: any };
   fieldName: string;
+  register: UseFormRegister<FieldValues>;
 }
 
-const TextFieldLogin = function ({ errors, fieldName, ...restProps }: ITextFieldLoginProps) {
+const TextFieldLogin = function ({ errors, fieldName, register }: ITextFieldLoginProps) {
   return (
     <TextField
-      {...restProps}
+      {...register(fieldName)}
       margin="dense"
       id={fieldName}
       type={fieldName}
+      label={capitalize(fieldName)}
       fullWidth
       variant="standard"
       required
@@ -41,6 +33,7 @@ export const LoginDialog = function () {
     handleSubmit,
     formState: { errors },
     control,
+    register,
   } = useForm();
 
   const onSubmit = (): void => {};
@@ -54,39 +47,14 @@ export const LoginDialog = function () {
           name="email"
           rules={{ required: 'Email is required' }}
           defaultValue=""
-          render={({ field }) => (
-            <TextField
-              {...field}
-              margin="dense"
-              id="email"
-              type="email"
-              label="Email"
-              fullWidth
-              variant="standard"
-              required
-              error={!!errors.email}
-              helperText={errors.email?.message}
-            />
-          )}
+          render={() => <TextFieldLogin errors={errors} fieldName="email" register={register} />}
         />
         <Controller
           control={control}
           name="password"
           rules={{ required: 'Password is required', minLength: { value: 8, message: 'Minimum length is 8' } }}
           defaultValue=""
-          render={({ field }) => (
-            <TextField
-              {...field}
-              margin="dense"
-              id="password"
-              type="password"
-              fullWidth
-              variant="standard"
-              required
-              error={!!errors.password}
-              helperText={errors.password?.message}
-            />
-          )}
+          render={() => <TextFieldLogin errors={errors} fieldName="password" register={register} />}
         />
       </DialogContent>
       <DialogActions>
